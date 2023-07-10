@@ -23,6 +23,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,6 +37,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -55,13 +58,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.facebook.R
 import com.example.facebook.ui.theme.ButtonGray
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navigateToSignInScreen: ()-> Unit
+) {
+    val viewModel = viewModel<HomeScreenViewModel>()
+    val screenState by viewModel.screenState.collectAsState()
+
+    when(screenState){
+        is HomeScreenState.Loading -> LoadingScreen()
+        is HomeScreenState.SignInRequired -> LaunchedEffect(key1 = true){
+            navigateToSignInScreen()
+        }
+        is HomeScreenState.isLoaded -> HomeScreenContent()
+    }
+
+
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun HomeScreenContent() {
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -214,7 +243,7 @@ fun StatusUpdateBar(
 
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6C4c6ym9QAEt4a_RvhJPhpLUojT5SxyaVKQ&usqp=CAU")
+                        .data("https://media.licdn.com/dms/image/D5603AQH63CO9GAL7sg/profile-displayphoto-shrink_200_200/0/1685352524697?e=1694649600&v=beta&t=Y32WzpxXctiNgnNOz094OPYTt-e2ebDmfYf1n2rxthQ")
                         .crossfade(true)
                         .placeholder(R.drawable.dp_placeholder)
                         .build(),
@@ -222,7 +251,11 @@ fun StatusUpdateBar(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
-                        .border(1.dp, color = MaterialTheme.colorScheme.onSurface, CircleShape)
+                        .border(
+                            1.dp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f),
+                            CircleShape
+                        )
 
                 )
                 var text by remember {

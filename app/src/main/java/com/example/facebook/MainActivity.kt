@@ -15,8 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.facebook.screens.home.AppScreens
+import com.example.facebook.screens.AppScreens
 import com.example.facebook.screens.home.HomeScreen
+import com.example.facebook.screens.signIn.SignInScreen
 import com.example.facebook.ui.theme.FacebookTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -36,7 +37,18 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = AppScreens.HomeScreen.name){
                         composable(AppScreens.HomeScreen.name){
-                            HomeScreen()
+                            HomeScreen(
+                                navigateToSignInScreen = {
+                                    navController.navigate(AppScreens.SignInScreen.name){
+                                        popUpTo(AppScreens.HomeScreen.name){
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                        composable(AppScreens.SignInScreen.name){
+                            SignInScreen()
                         }
                     }
                 }
