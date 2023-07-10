@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Facebook</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="facebook">facebook\n</string>
+    <string name="live">Live</string>
+    <string name="discuss">Discuss</string>
 </resources>

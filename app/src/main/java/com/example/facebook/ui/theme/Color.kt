@@ -12,3 +12,4 @@ val Pink40 = Color(0xFF7D5260)
 
 val FbBlue = Color(0xFF4267B2)
 val ButtonGray = Color(0xFFDADADA)
+val BackgroundGray = Color(0xFFA5A5A5)
